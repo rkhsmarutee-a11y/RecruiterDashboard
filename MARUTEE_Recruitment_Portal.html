@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MARUTEE Recruitment Portal</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    min-height: 100vh;
+    color: #1e293b;
+  }
+  header {
+    background: linear-gradient(90deg, #1e40af, #0ea5e9);
+    color: white;
+    padding: 18px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.3);
+  }
+  header .brand {
+    display: flex; align-items: center; gap: 14px;
+  }
+  header .logo {
+    width: 46px; height: 46px;
+    background: white;
+    color: #1e40af;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 20px;
+  }
+  header h1 { font-size: 20px; font-weight: 700; }
+  header .subtitle { font-size: 12px; opacity: 0.85; }
+  .user-bar { display: flex; gap: 12px; align-items: center; font-size: 14px; }
+  .user-bar .role-pill {
+    background: rgba(255,255,255,0.2);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+  .user-bar button {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .user-bar button:hover { background: rgba(255,255,255,0.3); }
+  main { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+  /* LOGIN */
+  .login-screen {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 80vh;
+  }
+  .login-card {
+    background: white;
+    border-radius: 20px;
+    padding: 48px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    max-width: 520px; width: 100%;
+    text-align: center;
+  }
+  .login-card h2 { font-size: 28px; color: #1e40af; margin-bottom: 8px; }
+  .login-card p { color: #64748b; margin-bottom: 30px; }
+  .role-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
+  .role-btn {
+    padding: 28px 20px;
+    border: 2px solid #e2e8f0;
+    background: #f8fafc;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .role-btn:hover { border-color: #0ea5e9; background: #eff6ff; transform: translateY(-3px); }
+  .role-btn .icon { font-size: 36px; margin-bottom: 10px; }
+  .role-btn h3 { color: #1e40af; margin-bottom: 6px; }
+  .role-btn p { color: #64748b; font-size: 12px; margin: 0; }
+  .login-card input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  /* TABS / NAV */
+  .tabs {
+    display: flex; gap: 6px;
+    background: white;
+    border-radius: 12px 12px 0 0;
+    padding: 10px 10px 0 10px;
+    margin-top: 16px;
+    overflow-x: auto;
+    border-bottom: 3px solid #e2e8f0;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 12px 20px;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-bottom: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    color: #334155;
+    border-radius: 8px 8px 0 0;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .tab-btn:hover { background: #dbeafe; color: #1e40af; }
+  .tab-btn.active {
+    background: linear-gradient(90deg, #1e40af, #0ea5e9);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 -2px 8px rgba(14,165,233,0.3);
+  }
+
+  .content-panel {
+    background: white;
+    border-radius: 0 0 12px 12px;
+    padding: 26px;
+    min-height: 500px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  }
+
+  /* FORMS */
+  .section-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid #e2e8f0;
+  }
+  .section-header h2 { color: #1e40af; font-size: 20px; }
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .form-grid.three { grid-template-columns: repeat(3, 1fr); }
+  .form-group { display: flex; flex-direction: column; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label {
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+  .form-group label .req { color: #dc2626; }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    background: white;
+    transition: border 0.2s;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: #0ea5e9;
+    box-shadow: 0 0 0 3px rgba(14,165,233,0.15);
+  }
+  .form-group textarea { min-height: 90px; resize: vertical; }
+  .form-group .hint { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+
+  .btn {
+    padding: 10px 22px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: linear-gradient(90deg, #1e40af, #0ea5e9);
+    color: white;
+  }
+  .btn-primary:hover { box-shadow: 0 6px 16px rgba(14,165,233,0.4); transform: translateY(-2px); }
+  .btn-success { background: #16a34a; color: white; }
+  .btn-success:hover { background: #15803d; }
+  .btn-danger { background: #dc2626; color: white; }
+  .btn-danger:hover { background: #b91c1c; }
+  .btn-warn { background: #f59e0b; color: white; }
+  .btn-warn:hover { background: #d97706; }
+  .btn-outline {
+    background: white;
+    color: #1e40af;
+    border: 2px solid #1e40af;
+  }
+  .btn-outline:hover { background: #eff6ff; }
+  .btn-small { padding: 6px 12px; font-size: 12px; }
+
+  .actions-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  /* TABLES */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .data-table thead {
+    background: linear-gradient(90deg, #1e40af, #0ea5e9);
+    color: white;
+  }
+  .data-table th, .data-table td {
+    padding: 11px 14px;
+    text-align: left;
+    font-size: 13px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .data-table th { font-weight: 700; }
+  .data-table tbody tr:hover { background: #f8fafc; }
+
+  /* BADGES */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .badge-open { background: #dbeafe; color: #1e40af; }
+  .badge-progress { background: #fef3c7; color: #92400e; }
+  .badge-closed { background: #d1fae5; color: #065f46; }
+  .badge-pending { background: #fef9c3; color: #854d0e; }
+  .badge-approved { background: #d1fae5; color: #065f46; }
+  .badge-rejected { background: #fee2e2; color: #991b1b; }
+  .badge-high { background: #fee2e2; color: #991b1b; }
+  .badge-medium { background: #fef3c7; color: #92400e; }
+  .badge-low { background: #dbeafe; color: #1e40af; }
+
+  /* KPI CARDS */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 22px;
+  }
+  .kpi-card {
+    background: linear-gradient(135deg, white, #f8fafc);
+    border-left: 4px solid #0ea5e9;
+    padding: 18px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .kpi-card .label { font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+  .kpi-card .value { font-size: 26px; color: #1e40af; font-weight: 800; margin-top: 4px; }
+  .kpi-card.warn { border-left-color: #f59e0b; }
+  .kpi-card.warn .value { color: #92400e; }
+  .kpi-card.success { border-left-color: #16a34a; }
+  .kpi-card.success .value { color: #065f46; }
+  .kpi-card.danger { border-left-color: #dc2626; }
+  .kpi-card.danger .value { color: #991b1b; }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(15,23,42,0.75);
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: white;
+    border-radius: 14px;
+    padding: 28px;
+    max-width: 700px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .modal h3 {
+    color: #1e40af;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e2e8f0;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #94a3b8;
+  }
+  .empty-state .icon { font-size: 50px; margin-bottom: 10px; }
+  .hide { display: none !important; }
+
+  .alert {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 13px;
+  }
+  .alert-info { background: #eff6ff; color: #1e40af; border-left: 4px solid #0ea5e9; }
+  .alert-success { background: #f0fdf4; color: #065f46; border-left: 4px solid #16a34a; }
+
+  .filter-bar {
+    display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;
+  }
+  .filter-bar select, .filter-bar input {
+    padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;
+  }
+
+  /* DASHBOARD CARDS & CHARTS */
+  .dash-card {
+    background: white;
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+    margin-bottom: 18px;
+  }
+  .dash-card h3 {
+    color: #1e40af;
+    font-size: 15px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .chart-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .chart-row:has(.dash-card.wide) {
+    grid-template-columns: 1fr 1fr;
+  }
+  .chart-row .dash-card { margin-bottom: 0; }
+  .chart-wrap {
+    position: relative;
+    height: 240px;
+    width: 100%;
+  }
+  @media (max-width: 1100px) {
+    .chart-row { grid-template-columns: 1fr; }
+  }
+
+  /* FUNNEL */
+  .funnel {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+    padding: 10px 0;
+  }
+  .funnel-step {
+    background: linear-gradient(90deg, #1e40af, #0ea5e9);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    min-width: 200px;
+    box-shadow: 0 2px 8px rgba(14,165,233,0.25);
+  }
+  .funnel-step .fn-count {
+    background: rgba(255,255,255,0.25);
+    padding: 3px 12px;
+    border-radius: 12px;
+    margin-left: 14px;
+    font-size: 13px;
+  }
+  .funnel-step.s1 { min-width: 90%; }
+  .funnel-step.s2 { min-width: 75%; background: linear-gradient(90deg, #0ea5e9, #06b6d4); }
+  .funnel-step.s3 { min-width: 60%; background: linear-gradient(90deg, #06b6d4, #f59e0b); }
+  .funnel-step.s4 { min-width: 45%; background: linear-gradient(90deg, #f59e0b, #f97316); }
+  .funnel-step.s5 { min-width: 30%; background: linear-gradient(90deg, #16a34a, #15803d); }
+
+  .kpi-card .trend { font-size: 11px; color: #64748b; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">M</div>
+    <div>
+      <h1>MARUTEE Recruitment Portal</h1>
+      <div class="subtitle">Thermal &amp; Automotive Pillar &mdash; Hiring Workflow</div>
+    </div>
+  </div>
+  <div class="user-bar" id="userBar" style="display:none;">
+    <span>Welcome, <strong id="userName">User</strong></span>
+    <span class="role-pill" id="userRole">Role</span>
+    <button onclick="logout()">Logout</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- LOGIN SCREEN -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <h2>Sign In to MARUTEE Portal</h2>
+      <p>Select your role to continue</p>
+      <input type="text" id="loginName" placeholder="Enter your full name">
+      <input type="email" id="loginEmail" placeholder="Enter your email (e.g. name@marutee.com)">
+      <div class="role-buttons">
+        <div class="role-btn" onclick="login('Manager')">
+          <div class="icon">M</div>
+          <h3>Manager</h3>
+          <p>Create requirements, assign, approve candidates</p>
+        </div>
+        <div class="role-btn" onclick="login('Recruiter')">
+          <div class="icon">R</div>
+          <h3>Recruiter</h3>
+          <p>Take assignments, submit candidates</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MANAGER DASHBOARD -->
+  <div id="managerPanel" class="hide">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('mgr','overview',this)">Overview</button>
+      <button class="tab-btn" onclick="switchTab('mgr','new-req',this)">+ New Requirement</button>
+      <button class="tab-btn" onclick="switchTab('mgr','requirements',this)">All Requirements</button>
+      <button class="tab-btn" onclick="switchTab('mgr','assign',this)">Assign Recruiters</button>
+      <button class="tab-btn" onclick="switchTab('mgr','approvals',this)">Candidate Approvals</button>
+      <button class="tab-btn" onclick="switchTab('mgr','reports',this)">Reports</button>
+    </div>
+
+    <div class="content-panel">
+
+      <!-- OVERVIEW -->
+      <div id="mgr-overview" class="tab-content">
+        <div class="section-header">
+          <h2>Manager Dashboard</h2>
+          <div>
+            <button class="btn btn-outline" onclick="exportDashboard()">Export Snapshot</button>
+            <button class="btn btn-primary" onclick="switchTab('mgr','new-req')">+ New Requirement</button>
+          </div>
+        </div>
+
+        <!-- TOP KPI ROW -->
+        <div class="kpi-grid">
+          <div class="kpi-card"><div class="label">Total Requirements</div><div class="value" id="kpiTotalReq">0</div><div class="trend" id="kpiTotalTrend"></div></div>
+          <div class="kpi-card"><div class="label">Open Requirements</div><div class="value" id="kpiOpenReq">0</div></div>
+          <div class="kpi-card warn"><div class="label">Awaiting Assignment</div><div class="value" id="kpiUnassigned">0</div></div>
+          <div class="kpi-card"><div class="label">Total Openings</div><div class="value" id="kpiOpenings">0</div></div>
+          <div class="kpi-card success"><div class="label">Positions Filled</div><div class="value" id="kpiFilled">0</div></div>
+          <div class="kpi-card danger"><div class="label">Urgent (High Priority)</div><div class="value" id="kpiUrgent">0</div></div>
+        </div>
+
+        <!-- SECOND KPI ROW -->
+        <div class="kpi-grid">
+          <div class="kpi-card"><div class="label">Candidates In Pipeline</div><div class="value" id="kpiCandidates">0</div></div>
+          <div class="kpi-card warn"><div class="label">Pending Approvals</div><div class="value" id="kpiPending">0</div></div>
+          <div class="kpi-card success"><div class="label">Candidates Approved</div><div class="value" id="kpiApproved">0</div></div>
+          <div class="kpi-card danger"><div class="label">Candidates Rejected</div><div class="value" id="kpiRejected">0</div></div>
+          <div class="kpi-card"><div class="label">Active Recruiters</div><div class="value" id="kpiRecruiters">0</div></div>
+          <div class="kpi-card warn"><div class="label">Deadlines This Week</div><div class="value" id="kpiWeekDead">0</div></div>
+        </div>
+
+        <!-- RECRUITMENT FUNNEL -->
+        <div class="dash-card">
+          <h3>Recruitment Pipeline Funnel</h3>
+          <div class="funnel" id="funnelView"></div>
+        </div>
+
+        <!-- CHART ROW 1 -->
+        <div class="chart-row">
+          <div class="dash-card">
+            <h3>Requirements by Status</h3>
+            <div class="chart-wrap"><canvas id="statusChart"></canvas></div>
+          </div>
+          <div class="dash-card">
+            <h3>Requirements by Priority</h3>
+            <div class="chart-wrap"><canvas id="priorityChart"></canvas></div>
+          </div>
+          <div class="dash-card">
+            <h3>Candidate Decision Split</h3>
+            <div class="chart-wrap"><canvas id="decisionChart"></canvas></div>
+          </div>
+        </div>
+
+        <!-- CHART ROW 2 -->
+        <div class="chart-row">
+          <div class="dash-card wide">
+            <h3>Requirements by Department</h3>
+            <div class="chart-wrap"><canvas id="deptChart"></canvas></div>
+          </div>
+          <div class="dash-card wide">
+            <h3>Requirements by Location</h3>
+            <div class="chart-wrap"><canvas id="locationChart"></canvas></div>
+          </div>
+        </div>
+
+        <!-- TOP RECRUITERS + URGENT -->
+        <div class="chart-row">
+          <div class="dash-card">
+            <h3>Top Recruiters (by candidates submitted)</h3>
+            <table class="data-table" style="margin-top:6px;">
+              <thead><tr><th>Recruiter</th><th>Assigned</th><th>Submitted</th><th>Approved</th><th>Success %</th></tr></thead>
+              <tbody id="topRecruiters"></tbody>
+            </table>
+          </div>
+          <div class="dash-card">
+            <h3>Urgent Items &amp; Upcoming Deadlines</h3>
+            <table class="data-table" style="margin-top:6px;">
+              <thead><tr><th>Job Code</th><th>Title</th><th>Priority</th><th>Days Left</th><th>Status</th></tr></thead>
+              <tbody id="urgentList"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- RECENT CANDIDATES + ACTIVITY -->
+        <div class="chart-row">
+          <div class="dash-card">
+            <h3>Latest Candidates Submitted</h3>
+            <table class="data-table" style="margin-top:6px;">
+              <thead><tr><th>Candidate</th><th>Position</th><th>By</th><th>Status</th></tr></thead>
+              <tbody id="recentCands"></tbody>
+            </table>
+          </div>
+          <div class="dash-card">
+            <h3>Recent Activity</h3>
+            <table class="data-table" style="margin-top:6px;">
+              <thead><tr><th>Date</th><th>Action</th><th>By</th><th>Detail</th></tr></thead>
+              <tbody id="activityFeed"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- NEW REQUIREMENT FORM -->
+      <div id="mgr-new-req" class="tab-content hide">
+        <div class="section-header"><h2>Create New Hiring Requirement</h2></div>
+        <div class="alert alert-info">Fill in position details below. Once saved, go to "Assign Recruiters" to delegate this requirement.</div>
+        <form id="newReqForm" onsubmit="saveRequirement(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Position Title <span class="req">*</span></label>
+              <input type="text" name="title" required placeholder="e.g. Senior CFD Engineer - Battery Thermal">
+            </div>
+            <div class="form-group">
+              <label>Department / Pillar <span class="req">*</span></label>
+              <select name="department" required>
+                <option value="">Select</option>
+                <option>Thermal &amp; Automotive</option>
+                <option>CFD Engineering</option>
+                <option>Battery Systems</option>
+                <option>Aerospace</option>
+                <option>Defense</option>
+                <option>Consumer Electronics</option>
+                <option>Sales &amp; BD</option>
+                <option>Operations</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Job Code / Requisition ID</label>
+              <input type="text" name="jobCode" placeholder="Auto-generated if blank" id="autoJobCode">
+            </div>
+            <div class="form-group">
+              <label>Number of Positions <span class="req">*</span></label>
+              <input type="number" name="openings" required min="1" value="1">
+            </div>
+            <div class="form-group">
+              <label>Location <span class="req">*</span></label>
+              <select name="location" required>
+                <option value="">Select</option>
+                <option>Bengaluru</option>
+                <option>Pune</option>
+                <option>Chennai</option>
+                <option>Hyderabad</option>
+                <option>Delhi NCR</option>
+                <option>Remote</option>
+                <option>Hybrid</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Employment Type <span class="req">*</span></label>
+              <select name="type" required>
+                <option>Full-time</option>
+                <option>Contract</option>
+                <option>Part-time</option>
+                <option>Intern</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Experience Required (Years) <span class="req">*</span></label>
+              <input type="text" name="experience" required placeholder="e.g. 3-5 years">
+            </div>
+            <div class="form-group">
+              <label>CTC Range (INR LPA)</label>
+              <input type="text" name="ctc" placeholder="e.g. 12-18 LPA">
+            </div>
+            <div class="form-group">
+              <label>Priority <span class="req">*</span></label>
+              <select name="priority" required>
+                <option value="High">High / Urgent</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Target Closure Date <span class="req">*</span></label>
+              <input type="date" name="deadline" required>
+            </div>
+            <div class="form-group full">
+              <label>Required Skills <span class="req">*</span></label>
+              <textarea name="skills" required placeholder="e.g. ANSYS Fluent, Star-CCM+, Battery Thermal Management, Python scripting, CHT analysis"></textarea>
+            </div>
+            <div class="form-group full">
+              <label>Key Responsibilities / JD Summary <span class="req">*</span></label>
+              <textarea name="jd" required placeholder="Brief description of role, responsibilities and expectations"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Hiring Manager</label>
+              <input type="text" name="hiringManager" id="hiringManagerField">
+            </div>
+            <div class="form-group">
+              <label>Budget Approved?</label>
+              <select name="budget"><option>Yes</option><option>Pending</option><option>No</option></select>
+            </div>
+          </div>
+          <div class="actions-row">
+            <button type="reset" class="btn btn-outline">Reset</button>
+            <button type="submit" class="btn btn-primary">Save Requirement</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ALL REQUIREMENTS -->
+      <div id="mgr-requirements" class="tab-content hide">
+        <div class="section-header"><h2>All Hiring Requirements</h2></div>
+        <div class="filter-bar">
+          <select id="filterStatus" onchange="renderRequirements()">
+            <option value="">All Status</option>
+            <option value="Open">Open</option>
+            <option value="Assigned">Assigned</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Closed">Closed</option>
+          </select>
+          <select id="filterPriority" onchange="renderRequirements()">
+            <option value="">All Priority</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+          <input type="text" id="filterSearch" placeholder="Search title or department..." oninput="renderRequirements()">
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Job Code</th><th>Title</th><th>Dept</th><th>Location</th>
+              <th>Exp</th><th>Priority</th><th>Assigned To</th><th>Status</th><th>Deadline</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="reqTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- ASSIGN RECRUITERS -->
+      <div id="mgr-assign" class="tab-content hide">
+        <div class="section-header"><h2>Assign Requirements to Recruiters</h2></div>
+        <div class="alert alert-info">Select unassigned or open requirements and delegate to a recruiter. Once assigned, the recruiter will see it in their queue.</div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Job Code</th><th>Title</th><th>Priority</th><th>Deadline</th>
+              <th>Current Assignment</th><th>Assign To</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="assignTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- APPROVALS -->
+      <div id="mgr-approvals" class="tab-content hide">
+        <div class="section-header"><h2>Candidate Approvals</h2></div>
+        <div class="alert alert-info">Review candidates submitted by recruiters. Approve or reject with comments.</div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Candidate</th><th>Position</th><th>Exp</th><th>Current Company</th>
+              <th>CTC (C/E)</th><th>Submitted By</th><th>Date</th><th>Status</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="approvalTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- REPORTS -->
+      <div id="mgr-reports" class="tab-content hide">
+        <div class="section-header"><h2>Recruitment Reports</h2></div>
+        <h3 style="color:#1e40af; margin-bottom:10px;">Recruiter Performance</h3>
+        <table class="data-table">
+          <thead>
+            <tr><th>Recruiter</th><th>Assigned</th><th>Candidates Submitted</th><th>Approved</th><th>Rejected</th><th>Pending</th></tr>
+          </thead>
+          <tbody id="performanceTable"></tbody>
+        </table>
+        <h3 style="color:#1e40af; margin: 20px 0 10px;">Requirements By Department</h3>
+        <table class="data-table">
+          <thead>
+            <tr><th>Department</th><th>Total</th><th>Open</th><th>In Progress</th><th>Closed</th></tr>
+          </thead>
+          <tbody id="deptTable"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RECRUITER DASHBOARD -->
+  <div id="recruiterPanel" class="hide">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('rec','overview',this)">My Dashboard</button>
+      <button class="tab-btn" onclick="switchTab('rec','available',this)">Available Assignments</button>
+      <button class="tab-btn" onclick="switchTab('rec','my-assignments',this)">My Assignments</button>
+      <button class="tab-btn" onclick="switchTab('rec','add-candidate',this)">+ Add Candidate</button>
+      <button class="tab-btn" onclick="switchTab('rec','my-candidates',this)">My Candidates</button>
+    </div>
+
+    <div class="content-panel">
+
+      <!-- OVERVIEW -->
+      <div id="rec-overview" class="tab-content">
+        <div class="section-header"><h2>Recruiter Overview</h2></div>
+        <div class="kpi-grid">
+          <div class="kpi-card"><div class="label">Assignments Taken</div><div class="value" id="recKpiAssigned">0</div></div>
+          <div class="kpi-card warn"><div class="label">Open Assignments</div><div class="value" id="recKpiOpen">0</div></div>
+          <div class="kpi-card"><div class="label">Candidates Submitted</div><div class="value" id="recKpiSubmitted">0</div></div>
+          <div class="kpi-card success"><div class="label">Approved</div><div class="value" id="recKpiApproved">0</div></div>
+          <div class="kpi-card danger"><div class="label">Rejected</div><div class="value" id="recKpiRejected">0</div></div>
+        </div>
+        <h3 style="color:#1e40af; margin: 20px 0 10px;">High Priority Items</h3>
+        <table class="data-table">
+          <thead><tr><th>Job Code</th><th>Title</th><th>Deadline</th><th>Days Left</th><th>Status</th></tr></thead>
+          <tbody id="recPriorityTable"></tbody>
+        </table>
+      </div>
+
+      <!-- AVAILABLE ASSIGNMENTS (to pick up) -->
+      <div id="rec-available" class="tab-content hide">
+        <div class="section-header"><h2>Available Assignments</h2></div>
+        <div class="alert alert-info">These requirements have been assigned to you by Manager or are open for pickup. Click "Accept Assignment" to take it up.</div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Job Code</th><th>Title</th><th>Dept</th><th>Location</th>
+              <th>Priority</th><th>Deadline</th><th>Assigned By</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="availableTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- MY ASSIGNMENTS -->
+      <div id="rec-my-assignments" class="tab-content hide">
+        <div class="section-header"><h2>My Active Assignments</h2></div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Job Code</th><th>Title</th><th>Priority</th><th>Deadline</th>
+              <th>Candidates Submitted</th><th>Approved</th><th>Status</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="myAssignTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- ADD CANDIDATE FORM -->
+      <div id="rec-add-candidate" class="tab-content hide">
+        <div class="section-header"><h2>Submit Candidate Details</h2></div>
+        <div class="alert alert-info">Fill in candidate details against one of your active assignments. Upon submission, Manager will be notified for approval.</div>
+        <form id="candForm" onsubmit="saveCandidate(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Select Assignment <span class="req">*</span></label>
+              <select name="reqId" id="candReqSelect" required></select>
+            </div>
+            <div class="form-group">
+              <label>Candidate Full Name <span class="req">*</span></label>
+              <input type="text" name="candidateName" required>
+            </div>
+            <div class="form-group">
+              <label>Email ID <span class="req">*</span></label>
+              <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label>Mobile Number <span class="req">*</span></label>
+              <input type="tel" name="phone" required pattern="[0-9+ -]{10,15}">
+            </div>
+            <div class="form-group">
+              <label>Current Company</label>
+              <input type="text" name="currentCompany">
+            </div>
+            <div class="form-group">
+              <label>Current Designation</label>
+              <input type="text" name="designation">
+            </div>
+            <div class="form-group">
+              <label>Total Experience (Years) <span class="req">*</span></label>
+              <input type="number" name="experience" required step="0.5" min="0">
+            </div>
+            <div class="form-group">
+              <label>Relevant Experience (Years)</label>
+              <input type="number" name="relevantExp" step="0.5" min="0">
+            </div>
+            <div class="form-group">
+              <label>Current CTC (LPA)</label>
+              <input type="text" name="currentCTC">
+            </div>
+            <div class="form-group">
+              <label>Expected CTC (LPA)</label>
+              <input type="text" name="expectedCTC">
+            </div>
+            <div class="form-group">
+              <label>Notice Period</label>
+              <select name="notice">
+                <option>Immediate</option>
+                <option>15 Days</option>
+                <option>30 Days</option>
+                <option>60 Days</option>
+                <option>90 Days</option>
+                <option>Serving Notice</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Current Location</label>
+              <input type="text" name="location">
+            </div>
+            <div class="form-group">
+              <label>Ready to Relocate?</label>
+              <select name="relocate"><option>Yes</option><option>No</option><option>Negotiable</option></select>
+            </div>
+            <div class="form-group">
+              <label>Source</label>
+              <select name="source">
+                <option>LinkedIn</option>
+                <option>Naukri</option>
+                <option>Referral</option>
+                <option>Internal Database</option>
+                <option>Job Portal</option>
+                <option>Walk-in</option>
+                <option>Consultancy</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label>Key Skills Match <span class="req">*</span></label>
+              <textarea name="skillsMatch" required placeholder="List relevant technical and domain skills matching the JD"></textarea>
+            </div>
+            <div class="form-group full">
+              <label>Recruiter Notes / Evaluation</label>
+              <textarea name="notes" placeholder="Your screening notes, strengths, concerns, fitment score etc"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Resume Link / Reference</label>
+              <input type="text" name="resume" placeholder="File name or URL">
+            </div>
+            <div class="form-group">
+              <label>Screening Score (1-10)</label>
+              <input type="number" name="score" min="1" max="10">
+            </div>
+          </div>
+          <div class="actions-row">
+            <button type="reset" class="btn btn-outline">Clear Form</button>
+            <button type="submit" class="btn btn-primary">Submit to Manager for Approval</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- MY CANDIDATES -->
+      <div id="rec-my-candidates" class="tab-content hide">
+        <div class="section-header"><h2>My Submitted Candidates</h2></div>
+        <div class="filter-bar">
+          <select id="candFilterStatus" onchange="renderMyCandidates()">
+            <option value="">All Status</option>
+            <option value="Pending">Pending</option>
+            <option value="Approved">Approved</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Candidate</th><th>Position</th><th>Exp</th><th>CTC (C/E)</th>
+              <th>Status</th><th>Submitted</th><th>Manager Feedback</th>
+            </tr>
+          </thead>
+          <tbody id="myCandTableBody"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- APPROVAL MODAL -->
+<div id="approvalModal" class="modal-overlay">
+  <div class="modal">
+    <h3>Review Candidate</h3>
+    <div id="approvalDetails"></div>
+    <div class="form-group" style="margin-top:14px;">
+      <label>Manager Feedback / Comments</label>
+      <textarea id="managerFeedback" placeholder="Share your assessment, next steps, or reason for rejection"></textarea>
+    </div>
+    <div class="actions-row">
+      <button class="btn btn-outline" onclick="closeModal('approvalModal')">Cancel</button>
+      <button class="btn btn-danger" onclick="decideCandidate('Rejected')">Reject</button>
+      <button class="btn btn-success" onclick="decideCandidate('Approved')">Approve</button>
+    </div>
+  </div>
+</div>
+
+<!-- ASSIGN MODAL -->
+<div id="assignModal" class="modal-overlay">
+  <div class="modal">
+    <h3>Assign Requirement to Recruiter</h3>
+    <div id="assignDetails"></div>
+    <div class="form-group" style="margin-top:14px;">
+      <label>Select Recruiter</label>
+      <select id="assignSelect">
+        <option value="">-- Choose --</option>
+      </select>
+    </div>
+    <div class="form-group" style="margin-top:10px;">
+      <label>Briefing Note (optional)</label>
+      <textarea id="assignNote" placeholder="Any specific instruction for the recruiter"></textarea>
+    </div>
+    <div class="actions-row">
+      <button class="btn btn-outline" onclick="closeModal('assignModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmAssign()">Assign</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =================== Data Storage ================== */
+const STORE_KEY = 'marutee_recruitment_v1';
+const RECRUITERS = ['Priya Sharma','Ankit Verma','Neha Iyer','Vikram Rao','Sneha Patel'];
+
+function loadStore() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e){}
+  return { users:[], requirements: seedReqs(), candidates: [], activity: [] };
+}
+function saveStore() { localStorage.setItem(STORE_KEY, JSON.stringify(store)); }
+
+function seedReqs() {
+  return [
+    { id:'REQ-1001', title:'Senior CFD Engineer - Battery Thermal', department:'Thermal & Automotive',
+      openings:2, location:'Bengaluru', type:'Full-time', experience:'5-8 years', ctc:'18-28 LPA',
+      priority:'High', deadline:'2026-05-20', skills:'ANSYS Fluent, Star-CCM+, Battery thermal, Python',
+      jd:'Lead CFD analysis for EV battery thermal management projects.', hiringManager:'R. Sharma',
+      budget:'Yes', status:'Open', assignedTo:null, createdBy:'System', createdAt:'2026-04-15' },
+    { id:'REQ-1002', title:'CFD Engineer - Aerodynamics', department:'CFD Engineering',
+      openings:1, location:'Pune', type:'Full-time', experience:'3-5 years', ctc:'12-18 LPA',
+      priority:'Medium', deadline:'2026-06-10', skills:'Star-CCM+, External aero, Meshing',
+      jd:'External aerodynamics of passenger vehicles.', hiringManager:'A. Kulkarni',
+      budget:'Yes', status:'Open', assignedTo:null, createdBy:'System', createdAt:'2026-04-18' },
+    { id:'REQ-1003', title:'Battery Pack Design Engineer', department:'Battery Systems',
+      openings:1, location:'Chennai', type:'Full-time', experience:'4-7 years', ctc:'15-22 LPA',
+      priority:'High', deadline:'2026-05-30', skills:'Battery module design, Cell testing, BMS basics',
+      jd:'Design battery packs for two-wheeler and passenger EV.', hiringManager:'K. Murthy',
+      budget:'Pending', status:'Open', assignedTo:null, createdBy:'System', createdAt:'2026-04-20' }
+  ];
+}
+
+let store = loadStore();
+let currentUser = null;
+let reqBeingAssigned = null;
+let candBeingReviewed = null;
+
+/* =================== Auth ================== */
+function login(role) {
+  const name = document.getElementById('loginName').value.trim();
+  const email = document.getElementById('loginEmail').value.trim();
+  if (!name || !email) {
+    alert('Please enter your name and email to login.');
+    return;
+  }
+  currentUser = { name, email, role };
+  if (!store.users.find(u => u.email === email)) {
+    store.users.push(currentUser);
+    saveStore();
+  }
+  document.getElementById('loginScreen').classList.add('hide');
+  document.getElementById('userBar').style.display = 'flex';
+  document.getElementById('userName').textContent = name;
+  document.getElementById('userRole').textContent = role;
+
+  if (role === 'Manager') {
+    document.getElementById('managerPanel').classList.remove('hide');
+    document.getElementById('hiringManagerField').value = name;
+    renderManagerAll();
+  } else {
+    document.getElementById('recruiterPanel').classList.remove('hide');
+    renderRecruiterAll();
+  }
+  logActivity('Login', name + ' logged in as ' + role);
+}
+function logout() {
+  currentUser = null;
+  location.reload();
+}
+
+/* =================== Tabs ================== */
+function switchTab(panel, tab, btn) {
+  const prefix = panel === 'mgr' ? 'mgr-' : 'rec-';
+  const container = panel === 'mgr' ? 'managerPanel' : 'recruiterPanel';
+  document.querySelectorAll('#'+container+' .tab-content').forEach(e => e.classList.add('hide'));
+  document.querySelectorAll('#'+container+' .tab-btn').forEach(e => e.classList.remove('active'));
+  const target = document.getElementById(prefix + tab);
+  if (target) target.classList.remove('hide');
+  if (btn) btn.classList.add('active');
+  else if (typeof event !== 'undefined' && event.target) event.target.classList.add('active');
+  try {
+    if (panel === 'mgr') renderManagerAll();
+    else renderRecruiterAll();
+  } catch(e) { console.warn('Render issue:', e); }
+}
+
+/* =================== Manager Logic ================== */
+function saveRequirement(e) {
+  e.preventDefault();
+  const f = new FormData(e.target);
+  const id = f.get('jobCode') || ('REQ-' + (1000 + store.requirements.length + 1));
+  const req = {
+    id, title: f.get('title'), department: f.get('department'),
+    openings: parseInt(f.get('openings')), location: f.get('location'),
+    type: f.get('type'), experience: f.get('experience'), ctc: f.get('ctc'),
+    priority: f.get('priority'), deadline: f.get('deadline'),
+    skills: f.get('skills'), jd: f.get('jd'),
+    hiringManager: f.get('hiringManager') || currentUser.name,
+    budget: f.get('budget'),
+    status: 'Open', assignedTo: null,
+    createdBy: currentUser.name, createdAt: new Date().toISOString().slice(0,10)
+  };
+  store.requirements.push(req);
+  logActivity('New Requirement', currentUser.name + ' created ' + id + ' - ' + req.title);
+  saveStore();
+  alert('Requirement ' + id + ' saved successfully!');
+  e.target.reset();
+  renderManagerAll();
+  switchTabById('mgr', 'requirements');
+}
+
+function switchTabById(panel, tab) {
+  const btns = document.querySelectorAll('#'+(panel==='mgr'?'managerPanel':'recruiterPanel')+' .tab-btn');
+  btns.forEach(b => {
+    if (b.textContent.toLowerCase().includes(tab.replace('-',' ').toLowerCase().split(' ')[0])) {
+      b.click();
+    }
+  });
+}
+
+function renderManagerAll() {
+  renderOverview();
+  renderRequirements();
+  renderAssignTable();
+  renderApprovals();
+  renderReports();
+}
+
+let dashCharts = {};
+
+function renderOverview() {
+  const reqs = store.requirements;
+  const cands = store.candidates;
+  const totalOpenings = reqs.reduce((s,r) => s + (parseInt(r.openings)||0), 0);
+  const filled = cands.filter(c => c.status === 'Approved').length;
+
+  // Top KPIs
+  setVal('kpiTotalReq', reqs.length);
+  setVal('kpiOpenReq', reqs.filter(r => r.status !== 'Closed').length);
+  setVal('kpiUnassigned', reqs.filter(r => !r.assignedTo).length);
+  setVal('kpiOpenings', totalOpenings);
+  setVal('kpiFilled', filled);
+  setVal('kpiUrgent', reqs.filter(r => r.priority === 'High' && r.status !== 'Closed').length);
+
+  // Second row
+  setVal('kpiCandidates', cands.length);
+  setVal('kpiPending', cands.filter(c => c.status === 'Pending').length);
+  setVal('kpiApproved', cands.filter(c => c.status === 'Approved').length);
+  setVal('kpiRejected', cands.filter(c => c.status === 'Rejected').length);
+  setVal('kpiRecruiters', new Set(reqs.filter(r=>r.assignedTo).map(r=>r.assignedTo)).size);
+
+  const today = new Date();
+  const weekAhead = new Date(today.getTime() + 7*86400000);
+  setVal('kpiWeekDead', reqs.filter(r => r.status !== 'Closed' && new Date(r.deadline) >= today && new Date(r.deadline) <= weekAhead).length);
+
+  // Funnel
+  renderFunnel(reqs, cands);
+
+  // Charts
+  renderStatusChart(reqs);
+  renderPriorityChart(reqs);
+  renderDecisionChart(cands);
+  renderDeptChart(reqs);
+  renderLocationChart(reqs);
+
+  // Top Recruiters
+  renderTopRecruiters();
+
+  // Urgent list
+  renderUrgentList(reqs);
+
+  // Recent candidates
+  renderRecentCands();
+
+  // Activity feed
+  const feed = document.getElementById('activityFeed');
+  feed.innerHTML = '';
+  store.activity.slice(-8).reverse().forEach(a => {
+    feed.innerHTML += `<tr><td style="white-space:nowrap;font-size:11px">${a.date}</td><td>${a.type}</td><td>${a.by}</td><td style="font-size:12px">${a.detail}</td></tr>`;
+  });
+  if (!store.activity.length) feed.innerHTML = '<tr><td colspan="4" class="empty-state">No activity yet</td></tr>';
+}
+
+function setVal(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
+
+function renderFunnel(reqs, cands) {
+  const el = document.getElementById('funnelView');
+  if (!el) return;
+  const steps = [
+    { label: 'Requirements Created', count: reqs.length, cls: 's1' },
+    { label: 'Assigned to Recruiters', count: reqs.filter(r=>r.assignedTo).length, cls: 's2' },
+    { label: 'Candidates Submitted', count: cands.length, cls: 's3' },
+    { label: 'Under Review / Pending', count: cands.filter(c=>c.status==='Pending').length, cls: 's4' },
+    { label: 'Approved / Offered', count: cands.filter(c=>c.status==='Approved').length, cls: 's5' }
+  ];
+  el.innerHTML = steps.map(s =>
+    `<div class="funnel-step ${s.cls}"><span>${s.label}</span><span class="fn-count">${s.count}</span></div>`
+  ).join('');
+}
+
+function makeChart(id, type, labels, data, colors, opts={}) {
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  if (typeof Chart === 'undefined') {
+    ctx.parentElement.innerHTML = '<div style="padding:20px;text-align:center;color:#94a3b8;font-size:12px;">Chart library not loaded.<br>Data: '+labels.map((l,i)=>l+': '+data[i]).join(' | ')+'</div>';
+    return;
+  }
+  if (dashCharts[id]) { try { dashCharts[id].destroy(); } catch(e){} }
+  try {
+  dashCharts[id] = new Chart(ctx, {
+    type,
+    data: {
+      labels,
+      datasets: [{
+        data,
+        backgroundColor: colors,
+        borderColor: type==='line' ? colors[0] : '#fff',
+        borderWidth: type==='doughnut' || type==='pie' ? 2 : 1,
+        tension: 0.3,
+        fill: type==='line'
+      }]
+    },
+    options: Object.assign({
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: type==='bar' || type==='line' ? 'top' : 'bottom', labels:{boxWidth:12, font:{size:11}} }
+      }
+    }, opts)
+  });
+  } catch(e) { console.warn('Chart error:', e); }
+}
+
+function renderStatusChart(reqs) {
+  const groups = {Open:0, Assigned:0, 'In Progress':0, Closed:0};
+  reqs.forEach(r => groups[r.status] = (groups[r.status]||0)+1);
+  makeChart('statusChart','doughnut',
+    Object.keys(groups),
+    Object.values(groups),
+    ['#0ea5e9','#1e40af','#f59e0b','#16a34a']);
+}
+function renderPriorityChart(reqs) {
+  const g = {High:0, Medium:0, Low:0};
+  reqs.forEach(r => g[r.priority] = (g[r.priority]||0)+1);
+  makeChart('priorityChart','pie',
+    Object.keys(g), Object.values(g),
+    ['#dc2626','#f59e0b','#0ea5e9']);
+}
+function renderDecisionChart(cands) {
+  const g = {Approved:0, Pending:0, Rejected:0};
+  cands.forEach(c => g[c.status] = (g[c.status]||0)+1);
+  makeChart('decisionChart','doughnut',
+    Object.keys(g), Object.values(g),
+    ['#16a34a','#f59e0b','#dc2626']);
+}
+function renderDeptChart(reqs) {
+  const g = {};
+  reqs.forEach(r => g[r.department] = (g[r.department]||0)+1);
+  makeChart('deptChart','bar',
+    Object.keys(g), Object.values(g),
+    Object.keys(g).map(()=>'#1e40af'),
+    { indexAxis:'y', plugins:{legend:{display:false}}, scales:{x:{ticks:{precision:0}}} });
+}
+function renderLocationChart(reqs) {
+  const g = {};
+  reqs.forEach(r => g[r.location] = (g[r.location]||0)+1);
+  makeChart('locationChart','bar',
+    Object.keys(g), Object.values(g),
+    Object.keys(g).map(()=>'#0ea5e9'),
+    { plugins:{legend:{display:false}}, scales:{y:{ticks:{precision:0}}} });
+}
+
+function renderTopRecruiters() {
+  const body = document.getElementById('topRecruiters');
+  if (!body) return;
+  body.innerHTML = '';
+  const all = [...new Set([...RECRUITERS, ...store.requirements.map(r=>r.assignedTo).filter(Boolean), ...store.candidates.map(c=>c.submittedBy)])];
+  const rows = all.map(rec => {
+    const assigned = store.requirements.filter(r => r.assignedTo === rec).length;
+    const cands = store.candidates.filter(c => c.submittedBy === rec);
+    const appr = cands.filter(c => c.status==='Approved').length;
+    const success = cands.length ? Math.round((appr/cands.length)*100) : 0;
+    return { rec, assigned, subs: cands.length, appr, success };
+  }).sort((a,b) => b.subs - a.subs || b.appr - a.appr).slice(0,6);
+  rows.forEach(r => {
+    body.innerHTML += `<tr>
+      <td><strong>${r.rec}</strong></td>
+      <td>${r.assigned}</td>
+      <td>${r.subs}</td>
+      <td>${r.appr}</td>
+      <td><strong style="color:${r.success>=50?'#16a34a':r.success>0?'#f59e0b':'#94a3b8'}">${r.success}%</strong></td>
+    </tr>`;
+  });
+  if (!rows.length) body.innerHTML = '<tr><td colspan="5" class="empty-state">No recruiters active yet</td></tr>';
+}
+
+function renderUrgentList(reqs) {
+  const body = document.getElementById('urgentList');
+  if (!body) return;
+  body.innerHTML = '';
+  const today = new Date();
+  const list = reqs.filter(r => r.status !== 'Closed')
+    .map(r => ({ ...r, daysLeft: Math.ceil((new Date(r.deadline) - today)/(86400000)) }))
+    .filter(r => r.priority === 'High' || r.daysLeft <= 14)
+    .sort((a,b) => a.daysLeft - b.daysLeft)
+    .slice(0,6);
+  list.forEach(r => {
+    const dColor = r.daysLeft < 0 ? '#dc2626' : r.daysLeft < 7 ? '#f59e0b' : '#1e40af';
+    body.innerHTML += `<tr>
+      <td>${r.id}</td>
+      <td style="font-size:12px">${r.title}</td>
+      <td><span class="badge badge-${r.priority.toLowerCase()}">${r.priority}</span></td>
+      <td><strong style="color:${dColor}">${r.daysLeft<0?'Overdue '+Math.abs(r.daysLeft)+'d':r.daysLeft+' days'}</strong></td>
+      <td><span class="badge badge-${r.status==='Open'?'open':'progress'}">${r.status}</span></td>
+    </tr>`;
+  });
+  if (!list.length) body.innerHTML = '<tr><td colspan="5" class="empty-state">No urgent items</td></tr>';
+}
+
+function renderRecentCands() {
+  const body = document.getElementById('recentCands');
+  if (!body) return;
+  body.innerHTML = '';
+  const latest = [...store.candidates].reverse().slice(0,6);
+  latest.forEach(c => {
+    const r = store.requirements.find(x => x.id === c.reqId);
+    body.innerHTML += `<tr>
+      <td><strong>${c.candidateName}</strong></td>
+      <td style="font-size:12px">${r?r.title:c.reqId}</td>
+      <td>${c.submittedBy}</td>
+      <td><span class="badge badge-${c.status.toLowerCase()}">${c.status}</span></td>
+    </tr>`;
+  });
+  if (!latest.length) body.innerHTML = '<tr><td colspan="4" class="empty-state">No candidates yet</td></tr>';
+}
+
+function exportDashboard() {
+  const data = {
+    snapshotDate: new Date().toISOString(),
+    requirements: store.requirements,
+    candidates: store.candidates,
+    activity: store.activity
+  };
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'marutee_recruitment_snapshot_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+}
+
+function renderRequirements() {
+  const body = document.getElementById('reqTableBody');
+  const statusF = document.getElementById('filterStatus').value;
+  const priorityF = document.getElementById('filterPriority').value;
+  const searchF = document.getElementById('filterSearch').value.toLowerCase();
+  body.innerHTML = '';
+  let list = store.requirements;
+  if (statusF) list = list.filter(r => r.status === statusF);
+  if (priorityF) list = list.filter(r => r.priority === priorityF);
+  if (searchF) list = list.filter(r => (r.title+' '+r.department).toLowerCase().includes(searchF));
+
+  list.forEach(r => {
+    body.innerHTML += `<tr>
+      <td><strong>${r.id}</strong></td>
+      <td>${r.title}</td>
+      <td>${r.department}</td>
+      <td>${r.location}</td>
+      <td>${r.experience}</td>
+      <td><span class="badge badge-${r.priority.toLowerCase()}">${r.priority}</span></td>
+      <td>${r.assignedTo || '<em style="color:#94a3b8">Unassigned</em>'}</td>
+      <td><span class="badge ${r.status==='Open'?'badge-open':r.status==='Closed'?'badge-closed':'badge-progress'}">${r.status}</span></td>
+      <td>${r.deadline}</td>
+      <td>
+        <button class="btn btn-small btn-primary" onclick="openAssignModal('${r.id}')">Assign</button>
+        <button class="btn btn-small btn-outline" onclick="viewRequirement('${r.id}')">View</button>
+      </td>
+    </tr>`;
+  });
+  if (!list.length) body.innerHTML = '<tr><td colspan="10" class="empty-state">No requirements match filters</td></tr>';
+}
+
+function renderAssignTable() {
+  const body = document.getElementById('assignTableBody');
+  body.innerHTML = '';
+  store.requirements.filter(r => r.status !== 'Closed').forEach(r => {
+    body.innerHTML += `<tr>
+      <td>${r.id}</td><td>${r.title}</td>
+      <td><span class="badge badge-${r.priority.toLowerCase()}">${r.priority}</span></td>
+      <td>${r.deadline}</td>
+      <td>${r.assignedTo || '<em style="color:#94a3b8">None</em>'}</td>
+      <td>
+        <select id="quickAssign-${r.id}">
+          <option value="">-- Recruiter --</option>
+          ${RECRUITERS.map(n=>`<option ${r.assignedTo===n?'selected':''}>${n}</option>`).join('')}
+        </select>
+      </td>
+      <td><button class="btn btn-small btn-success" onclick="quickAssign('${r.id}')">Assign</button></td>
+    </tr>`;
+  });
+}
+
+function quickAssign(reqId) {
+  const sel = document.getElementById('quickAssign-'+reqId);
+  const recruiter = sel.value;
+  if (!recruiter) { alert('Please select a recruiter'); return; }
+  const r = store.requirements.find(x => x.id === reqId);
+  r.assignedTo = recruiter;
+  r.status = 'Assigned';
+  logActivity('Assignment', currentUser.name + ' assigned ' + reqId + ' to ' + recruiter);
+  saveStore();
+  alert(reqId + ' assigned to ' + recruiter);
+  renderManagerAll();
+}
+
+function openAssignModal(reqId) {
+  reqBeingAssigned = reqId;
+  const r = store.requirements.find(x => x.id === reqId);
+  document.getElementById('assignDetails').innerHTML =
+    `<p><strong>${r.id}</strong> - ${r.title}</p>
+     <p style="color:#64748b;font-size:13px">${r.department} / ${r.location} / ${r.experience}</p>`;
+  const sel = document.getElementById('assignSelect');
+  sel.innerHTML = '<option value="">-- Choose Recruiter --</option>' +
+    RECRUITERS.map(n => `<option ${r.assignedTo===n?'selected':''}>${n}</option>`).join('');
+  document.getElementById('assignNote').value = '';
+  document.getElementById('assignModal').classList.add('open');
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function confirmAssign() {
+  const recruiter = document.getElementById('assignSelect').value;
+  if (!recruiter) { alert('Please select recruiter'); return; }
+  const note = document.getElementById('assignNote').value;
+  const r = store.requirements.find(x => x.id === reqBeingAssigned);
+  r.assignedTo = recruiter;
+  r.status = 'Assigned';
+  r.briefNote = note;
+  logActivity('Assignment', currentUser.name + ' assigned ' + r.id + ' to ' + recruiter);
+  saveStore();
+  closeModal('assignModal');
+  renderManagerAll();
+  alert('Assigned successfully to ' + recruiter);
+}
+
+function viewRequirement(id) {
+  const r = store.requirements.find(x => x.id === id);
+  alert(`${r.id} - ${r.title}\n\nDept: ${r.department}\nLocation: ${r.location}\nExperience: ${r.experience}\nCTC: ${r.ctc}\nSkills: ${r.skills}\n\nJD: ${r.jd}\n\nStatus: ${r.status}\nAssigned: ${r.assignedTo||'None'}`);
+}
+
+function renderApprovals() {
+  const body = document.getElementById('approvalTableBody');
+  body.innerHTML = '';
+  store.candidates.forEach(c => {
+    const r = store.requirements.find(x => x.id === c.reqId);
+    body.innerHTML += `<tr>
+      <td><strong>${c.candidateName}</strong><br><small style="color:#64748b">${c.email}</small></td>
+      <td>${r?r.title:c.reqId}</td>
+      <td>${c.experience}y</td>
+      <td>${c.currentCompany||'-'}</td>
+      <td>${c.currentCTC||'-'} / ${c.expectedCTC||'-'}</td>
+      <td>${c.submittedBy}</td>
+      <td>${c.submittedAt}</td>
+      <td><span class="badge badge-${c.status.toLowerCase()}">${c.status}</span></td>
+      <td>
+        ${c.status==='Pending' ? `<button class="btn btn-small btn-primary" onclick="openApproval('${c.id}')">Review</button>` : `<button class="btn btn-small btn-outline" onclick="viewCandidate('${c.id}')">View</button>`}
+      </td>
+    </tr>`;
+  });
+  if (!store.candidates.length) body.innerHTML = '<tr><td colspan="9" class="empty-state">No candidates submitted yet</td></tr>';
+}
+
+function openApproval(candId) {
+  candBeingReviewed = candId;
+  const c = store.candidates.find(x => x.id === candId);
+  const r = store.requirements.find(x => x.id === c.reqId);
+  document.getElementById('approvalDetails').innerHTML = `
+    <p><strong>${c.candidateName}</strong> &middot; ${c.email} &middot; ${c.phone}</p>
+    <p style="color:#64748b;font-size:13px;margin-top:6px;">Position: ${r?r.title:c.reqId}</p>
+    <div style="background:#f8fafc;padding:12px;border-radius:8px;margin-top:10px;font-size:13px;">
+      <div><strong>Current:</strong> ${c.designation||'-'} @ ${c.currentCompany||'-'}</div>
+      <div><strong>Experience:</strong> ${c.experience} yrs (Relevant: ${c.relevantExp||'-'} yrs)</div>
+      <div><strong>CTC:</strong> Current ${c.currentCTC||'-'} / Expected ${c.expectedCTC||'-'}</div>
+      <div><strong>Notice:</strong> ${c.notice} &middot; <strong>Location:</strong> ${c.location||'-'} &middot; Relocate: ${c.relocate}</div>
+      <div><strong>Source:</strong> ${c.source} &middot; <strong>Score:</strong> ${c.score||'-'}/10</div>
+      <div style="margin-top:8px;"><strong>Skills:</strong> ${c.skillsMatch}</div>
+      ${c.notes ? `<div style="margin-top:6px;"><strong>Recruiter Notes:</strong> ${c.notes}</div>` : ''}
+    </div>
+    <p style="margin-top:10px;font-size:13px;color:#64748b;">Submitted by <strong>${c.submittedBy}</strong> on ${c.submittedAt}</p>
+  `;
+  document.getElementById('managerFeedback').value = c.managerFeedback || '';
+  document.getElementById('approvalModal').classList.add('open');
+}
+
+function decideCandidate(decision) {
+  const c = store.candidates.find(x => x.id === candBeingReviewed);
+  c.status = decision;
+  c.managerFeedback = document.getElementById('managerFeedback').value;
+  c.decidedBy = currentUser.name;
+  c.decidedAt = new Date().toISOString().slice(0,10);
+  logActivity('Approval', currentUser.name + ' ' + decision.toLowerCase() + ' ' + c.candidateName + ' for ' + c.reqId);
+  saveStore();
+  closeModal('approvalModal');
+  renderManagerAll();
+  alert('Candidate ' + decision);
+}
+
+function viewCandidate(id) {
+  const c = store.candidates.find(x => x.id === id);
+  alert(`${c.candidateName}\nEmail: ${c.email}\nStatus: ${c.status}\nFeedback: ${c.managerFeedback||'-'}`);
+}
+
+function renderReports() {
+  const perf = document.getElementById('performanceTable');
+  perf.innerHTML = '';
+  const recruiters = [...new Set(store.requirements.map(r=>r.assignedTo).filter(Boolean))];
+  [...new Set([...recruiters, ...RECRUITERS])].forEach(rec => {
+    const assigned = store.requirements.filter(r => r.assignedTo === rec).length;
+    const cands = store.candidates.filter(c => c.submittedBy === rec);
+    perf.innerHTML += `<tr>
+      <td><strong>${rec}</strong></td>
+      <td>${assigned}</td>
+      <td>${cands.length}</td>
+      <td>${cands.filter(c=>c.status==='Approved').length}</td>
+      <td>${cands.filter(c=>c.status==='Rejected').length}</td>
+      <td>${cands.filter(c=>c.status==='Pending').length}</td>
+    </tr>`;
+  });
+
+  const deptBody = document.getElementById('deptTable');
+  deptBody.innerHTML = '';
+  const depts = [...new Set(store.requirements.map(r=>r.department))];
+  depts.forEach(d => {
+    const rows = store.requirements.filter(r => r.department === d);
+    deptBody.innerHTML += `<tr>
+      <td>${d}</td><td>${rows.length}</td>
+      <td>${rows.filter(r=>r.status==='Open').length}</td>
+      <td>${rows.filter(r=>r.status==='Assigned'||r.status==='In Progress').length}</td>
+      <td>${rows.filter(r=>r.status==='Closed').length}</td>
+    </tr>`;
+  });
+}
+
+/* =================== Recruiter Logic ================== */
+function renderRecruiterAll() {
+  renderRecOverview();
+  renderAvailable();
+  renderMyAssignments();
+  renderCandReqSelect();
+  renderMyCandidates();
+}
+
+function renderRecOverview() {
+  const mine = store.requirements.filter(r => r.assignedTo === currentUser.name);
+  const myCands = store.candidates.filter(c => c.submittedBy === currentUser.name);
+  document.getElementById('recKpiAssigned').textContent = mine.length;
+  document.getElementById('recKpiOpen').textContent = mine.filter(r => r.status !== 'Closed').length;
+  document.getElementById('recKpiSubmitted').textContent = myCands.length;
+  document.getElementById('recKpiApproved').textContent = myCands.filter(c => c.status === 'Approved').length;
+  document.getElementById('recKpiRejected').textContent = myCands.filter(c => c.status === 'Rejected').length;
+
+  const body = document.getElementById('recPriorityTable');
+  body.innerHTML = '';
+  const today = new Date();
+  mine.filter(r => r.priority === 'High').forEach(r => {
+    const days = Math.ceil((new Date(r.deadline) - today)/(86400000));
+    body.innerHTML += `<tr>
+      <td>${r.id}</td><td>${r.title}</td><td>${r.deadline}</td>
+      <td style="color:${days<7?'#dc2626':'#1e40af'};font-weight:700">${days} days</td>
+      <td><span class="badge badge-${r.status==='Open'?'open':'progress'}">${r.status}</span></td>
+    </tr>`;
+  });
+  if (!mine.filter(r=>r.priority==='High').length) body.innerHTML = '<tr><td colspan="5" class="empty-state">No high priority items</td></tr>';
+}
+
+function renderAvailable() {
+  const body = document.getElementById('availableTableBody');
+  body.innerHTML = '';
+  const available = store.requirements.filter(r =>
+    (r.assignedTo === currentUser.name || !r.assignedTo) && r.status !== 'Closed'
+  );
+  available.forEach(r => {
+    const isMine = r.assignedTo === currentUser.name;
+    body.innerHTML += `<tr>
+      <td>${r.id}</td><td>${r.title}</td><td>${r.department}</td><td>${r.location}</td>
+      <td><span class="badge badge-${r.priority.toLowerCase()}">${r.priority}</span></td>
+      <td>${r.deadline}</td>
+      <td>${r.createdBy}</td>
+      <td>
+        ${isMine
+          ? '<span class="badge badge-approved">Accepted</span>'
+          : `<button class="btn btn-small btn-success" onclick="acceptAssignment('${r.id}')">Accept Assignment</button>`}
+        <button class="btn btn-small btn-outline" onclick="viewRequirement('${r.id}')">View</button>
+      </td>
+    </tr>`;
+  });
+  if (!available.length) body.innerHTML = '<tr><td colspan="8" class="empty-state">No available assignments</td></tr>';
+}
+
+function acceptAssignment(reqId) {
+  const r = store.requirements.find(x => x.id === reqId);
+  if (r.assignedTo && r.assignedTo !== currentUser.name) {
+    if (!confirm('This is currently assigned to ' + r.assignedTo + '. Take it over?')) return;
+  }
+  r.assignedTo = currentUser.name;
+  r.status = 'In Progress';
+  logActivity('Accepted', currentUser.name + ' accepted ' + reqId);
+  saveStore();
+  alert('Assignment accepted: ' + reqId);
+  renderRecruiterAll();
+}
+
+function renderMyAssignments() {
+  const body = document.getElementById('myAssignTableBody');
+  body.innerHTML = '';
+  const mine = store.requirements.filter(r => r.assignedTo === currentUser.name);
+  mine.forEach(r => {
+    const cands = store.candidates.filter(c => c.reqId === r.id && c.submittedBy === currentUser.name);
+    const approved = cands.filter(c => c.status === 'Approved').length;
+    body.innerHTML += `<tr>
+      <td>${r.id}</td><td>${r.title}</td>
+      <td><span class="badge badge-${r.priority.toLowerCase()}">${r.priority}</span></td>
+      <td>${r.deadline}</td><td>${cands.length}</td><td>${approved}</td>
+      <td><span class="badge badge-${r.status==='Open'?'open':r.status==='Closed'?'closed':'progress'}">${r.status}</span></td>
+      <td>
+        <button class="btn btn-small btn-primary" onclick="quickAddCandidate('${r.id}')">+ Add Candidate</button>
+        <button class="btn btn-small btn-outline" onclick="viewRequirement('${r.id}')">View</button>
+      </td>
+    </tr>`;
+  });
+  if (!mine.length) body.innerHTML = '<tr><td colspan="8" class="empty-state">No active assignments yet. Visit "Available Assignments" to accept one.</td></tr>';
+}
+
+function quickAddCandidate(reqId) {
+  document.getElementById('candReqSelect').value = reqId;
+  const btns = document.querySelectorAll('#recruiterPanel .tab-btn');
+  btns[3].click();
+}
+
+function renderCandReqSelect() {
+  const sel = document.getElementById('candReqSelect');
+  const mine = store.requirements.filter(r => r.assignedTo === currentUser.name && r.status !== 'Closed');
+  sel.innerHTML = '<option value="">-- Select assignment --</option>' +
+    mine.map(r => `<option value="${r.id}">${r.id} - ${r.title}</option>`).join('');
+}
+
+function saveCandidate(e) {
+  e.preventDefault();
+  const f = new FormData(e.target);
+  if (!f.get('reqId')) { alert('Please select an assignment first.'); return; }
+  const cand = {
+    id: 'CAND-' + Date.now().toString().slice(-6),
+    reqId: f.get('reqId'),
+    candidateName: f.get('candidateName'),
+    email: f.get('email'),
+    phone: f.get('phone'),
+    currentCompany: f.get('currentCompany'),
+    designation: f.get('designation'),
+    experience: f.get('experience'),
+    relevantExp: f.get('relevantExp'),
+    currentCTC: f.get('currentCTC'),
+    expectedCTC: f.get('expectedCTC'),
+    notice: f.get('notice'),
+    location: f.get('location'),
+    relocate: f.get('relocate'),
+    source: f.get('source'),
+    skillsMatch: f.get('skillsMatch'),
+    notes: f.get('notes'),
+    resume: f.get('resume'),
+    score: f.get('score'),
+    status: 'Pending',
+    submittedBy: currentUser.name,
+    submittedAt: new Date().toISOString().slice(0,10),
+    managerFeedback: ''
+  };
+  store.candidates.push(cand);
+  const r = store.requirements.find(x => x.id === cand.reqId);
+  if (r && r.status === 'Assigned') r.status = 'In Progress';
+  logActivity('Candidate Submitted', currentUser.name + ' submitted ' + cand.candidateName + ' for ' + cand.reqId);
+  saveStore();
+  alert('Candidate submitted to Manager for approval!');
+  e.target.reset();
+  renderRecruiterAll();
+}
+
+function renderMyCandidates() {
+  const body = document.getElementById('myCandTableBody');
+  const filter = document.getElementById('candFilterStatus').value;
+  body.innerHTML = '';
+  let mine = store.candidates.filter(c => c.submittedBy === currentUser.name);
+  if (filter) mine = mine.filter(c => c.status === filter);
+  mine.forEach(c => {
+    const r = store.requirements.find(x => x.id === c.reqId);
+    body.innerHTML += `<tr>
+      <td><strong>${c.candidateName}</strong><br><small style="color:#64748b">${c.email}</small></td>
+      <td>${r?r.title:c.reqId}</td>
+      <td>${c.experience}y</td>
+      <td>${c.currentCTC||'-'} / ${c.expectedCTC||'-'}</td>
+      <td><span class="badge badge-${c.status.toLowerCase()}">${c.status}</span></td>
+        <td>${c.submittedAt}</td>
+      <td>${c.managerFeedback || '<em style="color:#94a3b8">No feedback yet</em>'}</td>
+    </tr>`;
+  });
+  if (!mine.length) body.innerHTML = '<tr><td colspan="7" class="empty-state">No candidates submitted yet</td></tr>';
+}
+
+/* =================== Activity Log ================== */
+function logActivity(type, detail) {
+  store.activity.push({
+    date: new Date().toISOString().slice(0,16).replace('T',' '),
+    type, by: currentUser?currentUser.name:'System', detail
+  });
+  if (store.activity.length > 200) store.activity = store.activity.slice(-200);
+  saveStore();
+}
+
+/* =================== Init ================== */
+(function init(){
+  const jc = document.getElementById('autoJobCode');
+  if (jc) jc.placeholder = 'Auto: REQ-' + (1000 + store.requirements.length + 1);
+})();
+</script>
+
+</body>
+</html>
